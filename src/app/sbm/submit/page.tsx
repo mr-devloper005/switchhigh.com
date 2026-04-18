@@ -110,7 +110,7 @@ export default function SubmitBookmarkPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="site-canvas">
       <NavbarShell />
 
       <main>

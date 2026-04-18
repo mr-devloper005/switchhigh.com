@@ -72,11 +72,11 @@ export default async function SearchPage({
 
   return (
     <PageShell
-      title="Search"
+      title="Search the library"
       description={
         query
-          ? `Results for "${query}"`
-          : "Browse the latest posts across every task."
+          ? `Results for “${query}” across insights and contributor profiles.`
+          : "Search long-form insights and contributor profiles in one place."
       }
       actions={
         <form action="/search" className="flex w-full gap-2 sm:w-auto">
@@ -88,11 +88,11 @@ export default async function SearchPage({
             <Input
               name="q"
               defaultValue={query}
-              placeholder="Search across tasks..."
-              className="h-11 pl-9"
+              placeholder="Headlines, topics, contributors…"
+              className="h-11 rounded-md border-slate-200 bg-white pl-9 shadow-sm"
             />
           </div>
-          <Button type="submit" className="h-11">
+          <Button type="submit" className="h-11 rounded-md bg-[#b32025] font-semibold text-white hover:bg-[#951a1f]">
             Search
           </Button>
         </form>
@@ -107,8 +107,8 @@ export default async function SearchPage({
           })}
         </div>
       ) : (
-        <div className="rounded-2xl border border-dashed border-border p-10 text-center text-muted-foreground">
-          No matching posts yet.
+        <div className="rounded-md border border-dashed border-slate-300 bg-white p-10 text-center text-sm text-slate-600">
+          No matching insights or profiles yet. Try another phrase or browse from the homepage.
         </div>
       )}
     </PageShell>

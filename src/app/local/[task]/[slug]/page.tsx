@@ -41,8 +41,8 @@ const getContent = (post: any): PostContent => {
 const getImageUrls = (post: any, content: PostContent) => {
   const media = Array.isArray(post.media) ? post.media : [];
   const mediaImages = media
-    .map((item) => item?.url)
-    .filter((url): url is string => isValidImageUrl(url));
+    .map((item: { url?: string }) => item?.url)
+    .filter((url: string | undefined): url is string => isValidImageUrl(url));
   const contentImages = Array.isArray(content.images)
     ? content.images.filter((url): url is string => isValidImageUrl(url))
     : [];
@@ -109,7 +109,7 @@ export default function LocalPostDetailPage() {
 
   if (!post || !taskConfig) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="site-canvas">
         <NavbarShell />
         <main className="mx-auto max-w-3xl px-4 py-20 text-center">
           <h1 className="text-2xl font-semibold text-foreground">Post not found</h1>
@@ -135,7 +135,7 @@ export default function LocalPostDetailPage() {
   const mapEmbedUrl = buildMapEmbedUrl(content.latitude, content.longitude, location);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="site-canvas">
       <NavbarShell />
       <main className="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
         <Link
