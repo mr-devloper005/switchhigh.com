@@ -95,7 +95,7 @@ export default async function PdfDetailPage({ params }: { params: Promise<{ slug
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="site-canvas">
       <NavbarShell />
       <main className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-6 sm:px-6 lg:px-8">
         <SchemaJsonLd data={breadcrumbData} />
@@ -106,7 +106,7 @@ export default async function PdfDetailPage({ params }: { params: Promise<{ slug
           ← Back to PDF Library
         </Link>
         <h1 className="text-2xl font-semibold text-foreground">{post.title}</h1>
-        <div className="overflow-hidden rounded-2xl bg-background">
+        <div className="overflow-hidden rounded-md border border-slate-200/90 bg-white">
           <iframe
             src={viewerUrl}
             title={post.title}

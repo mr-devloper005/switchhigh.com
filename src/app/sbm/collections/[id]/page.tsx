@@ -38,7 +38,7 @@ export default function BookmarkCollectionDetailPage() {
 
   if (!collection) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="site-canvas">
         <NavbarShell />
         <main className="mx-auto max-w-4xl px-4 py-20 sm:px-6 lg:px-8">
           <Card className="border-border bg-card">
@@ -57,7 +57,7 @@ export default function BookmarkCollectionDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="site-canvas">
       <NavbarShell />
 
       <main>

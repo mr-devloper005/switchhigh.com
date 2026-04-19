@@ -60,6 +60,7 @@ export interface Listing {
   isFeatured: boolean
   isVerified: boolean
   status: 'active' | 'pending' | 'closed'
+  views?: number
 }
 
 export interface BusinessHours {

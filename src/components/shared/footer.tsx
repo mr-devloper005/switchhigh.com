@@ -87,8 +87,8 @@ export function Footer() {
           <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr_1fr]">
             <div className="rounded-[2rem] border border-white/10 bg-white/5 p-7">
               <div className="flex items-center gap-3">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/12 bg-white/8 p-1.5">
-                  <img src="/favicon.png?v=20260401" alt={`${SITE_CONFIG.name} logo`} width="48" height="48" className="h-full w-full object-contain" />
+                <div className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-2xl border border-white/12 bg-white/8 p-1">
+                  <img src="/favicon.png?v=20260418" alt={`${SITE_CONFIG.name} logo`} width="56" height="56" className="h-full w-full origin-center scale-[1.22] object-contain" />
                 </div>
                 <div>
                   <p className="text-lg font-semibold">{SITE_CONFIG.name}</p>
@@ -140,32 +140,79 @@ export function Footer() {
 
   if (recipe.footer === 'editorial-footer') {
     return (
-      <footer className="border-t border-[#dbc6b6] bg-[linear-gradient(180deg,#fff9f0_0%,#fff1df_100%)] text-[#2f1d16]">
-        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-          <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr_0.9fr]">
+      <footer className="border-t border-slate-800/80 bg-[linear-gradient(180deg,#0b1628_0%,#070f1a_100%)] text-slate-100">
+        <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
+          <div className="grid gap-12 lg:grid-cols-[1.15fr_0.85fr_0.85fr_0.85fr]">
             <div>
-              <div className="inline-flex items-center gap-2 rounded-full border border-[#dbc6b6] bg-white px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#72594a]">
-                <Sparkles className="h-3.5 w-3.5" />
-                Editorial desk
+              <div className="inline-flex items-center gap-2 rounded-sm border border-white/15 bg-white/5 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-white/80">
+                <Sparkles className="h-3.5 w-3.5 text-[#f87171]" />
+                Editorial platform
               </div>
-              <h3 className="mt-5 text-3xl font-semibold tracking-[-0.04em]">{SITE_CONFIG.name}</h3>
-              <p className="mt-4 max-w-md text-sm leading-7 text-[#72594a]">{SITE_CONFIG.description}</p>
+              <h3 className="mt-5 text-2xl font-semibold tracking-[-0.03em] text-white">{SITE_CONFIG.name}</h3>
+              <p className="mt-4 max-w-md text-sm leading-7 text-slate-400">{SITE_CONFIG.description}</p>
+              {primaryTask ? (
+                <Link
+                  href={primaryTask.route}
+                  className="mt-6 inline-flex items-center gap-2 rounded-md bg-[#b32025] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#951a1f]"
+                >
+                  Browse {primaryTask.label}
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+              ) : null}
             </div>
             <div>
-              <h4 className="text-xs font-semibold uppercase tracking-[0.24em] text-[#8b6d5a]">Sections</h4>
-              <ul className="mt-4 space-y-3 text-sm">
+              <h4 className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">Sections</h4>
+              <ul className="mt-4 space-y-3 text-sm text-slate-300">
                 {footerLinks.platform.map((item: any) => (
-                  <li key={item.name}><Link href={item.href} className="hover:text-[#2f1d16]">{item.name}</Link></li>
+                  <li key={item.name}>
+                    <Link href={item.href} className="inline-flex items-center gap-2 hover:text-white">
+                      {item.icon ? <item.icon className="h-4 w-4 text-slate-500" /> : null}
+                      {item.name}
+                    </Link>
+                  </li>
                 ))}
               </ul>
             </div>
             <div>
-              <h4 className="text-xs font-semibold uppercase tracking-[0.24em] text-[#8b6d5a]">Company</h4>
-              <ul className="mt-4 space-y-3 text-sm">
+              <h4 className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">Company</h4>
+              <ul className="mt-4 space-y-3 text-sm text-slate-300">
                 {footerLinks.company.map((item) => (
-                  <li key={item.name}><Link href={item.href} className="hover:text-[#2f1d16]">{item.name}</Link></li>
+                  <li key={item.name}>
+                    <Link href={item.href} className="hover:text-white">
+                      {item.name}
+                    </Link>
+                  </li>
                 ))}
               </ul>
+            </div>
+            <div>
+              <h4 className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">Legal</h4>
+              <ul className="mt-4 space-y-3 text-sm text-slate-300">
+                {footerLinks.legal.map((item) => (
+                  <li key={item.name}>
+                    <Link href={item.href} className="hover:text-white">
+                      {item.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+          <div className="mt-12 flex flex-col gap-3 border-t border-white/10 pt-8 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between">
+            <p>&copy; {new Date().getFullYear()} {SITE_CONFIG.name}. All rights reserved.</p>
+            <div className="flex gap-3">
+              {socialLinks.map((item) => (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-full border border-white/10 p-2 text-slate-300 hover:bg-white/10 hover:text-white"
+                  aria-label={item.name}
+                >
+                  <item.icon className="h-4 w-4" />
+                </Link>
+              ))}
             </div>
           </div>
         </div>
@@ -179,8 +226,8 @@ export function Footer() {
         <div className="grid gap-10 md:grid-cols-[1.2fr_0.8fr_0.8fr_0.8fr_0.8fr]">
           <div>
             <Link href="/" className="flex items-center gap-3">
-              <div className="h-11 w-11 overflow-hidden rounded-2xl border border-slate-200 bg-white p-1 shadow-sm">
-                <img src="/favicon.png?v=20260401" alt={`${SITE_CONFIG.name} logo`} width="44" height="44" className="h-full w-full object-contain" />
+              <div className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-white p-1 shadow-sm">
+                <img src="/favicon.png?v=20260418" alt={`${SITE_CONFIG.name} logo`} width="56" height="56" className="h-full w-full origin-center scale-[1.22] object-contain" />
               </div>
               <div>
                 <span className="block text-lg font-semibold">{SITE_CONFIG.name}</span>
