@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { ArrowRight, Bookmark, Building2, Compass, FileText, Globe2, Image as ImageIcon, LayoutGrid, MapPin, ShieldCheck, Tag, User } from 'lucide-react'
+import { ArrowRight, Bookmark, Building2, Compass, FileText, Image as ImageIcon, LayoutGrid, MapPin, ShieldCheck, Star, Tag, User } from 'lucide-react'
 import { ContentImage } from '@/components/shared/content-image'
 import { NavbarShell } from '@/components/shared/navbar-shell'
 import { Footer } from '@/components/shared/footer'
@@ -39,11 +39,20 @@ const taskIcons: Record<TaskKey, any> = {
   classified: Tag,
   image: ImageIcon,
   profile: User,
+  social: LayoutGrid,
+  pdf: FileText,
+  org: Building2,
+  comment: FileText,
 }
 
 function resolveTaskKey(value: unknown, fallback: TaskKey): TaskKey {
   if (value === 'listing' || value === 'classified' || value === 'article' || value === 'image' || value === 'profile' || value === 'sbm') return value
   return fallback
+}
+
+function postTaskKey(post: SitePost): string | undefined {
+  const extended = post as SitePost & { task?: string }
+  return extended.task
 }
 
 function getTaskHref(task: TaskKey, slug: string) {
@@ -101,14 +110,14 @@ function getDirectoryTone(brandPack: string) {
 
 function getEditorialTone() {
   return {
-    shell: 'bg-[#fbf6ee] text-[#241711]',
-    panel: 'border border-[#dcc8b7] bg-[#fffdfa] shadow-[0_24px_60px_rgba(77,47,27,0.08)]',
-    soft: 'border border-[#e6d6c8] bg-[#fff4e8]',
-    muted: 'text-[#6e5547]',
-    title: 'text-[#241711]',
-    badge: 'bg-[#241711] text-[#fff1e2]',
-    action: 'bg-[#241711] text-[#fff1e2] hover:bg-[#3a241b]',
-    actionAlt: 'border border-[#dcc8b7] bg-transparent text-[#241711] hover:bg-[#f5e7d7]',
+    shell: 'bg-[#f9f8f6] text-slate-900',
+    panel: 'border border-slate-200/90 bg-white shadow-[0_20px_55px_rgba(11,22,40,0.07)]',
+    soft: 'border border-slate-200/80 bg-white',
+    muted: 'text-slate-600',
+    title: 'text-slate-900',
+    badge: 'border border-[#b32025]/40 bg-white text-[#b32025]',
+    action: 'bg-[#b32025] text-white hover:bg-[#951a1f]',
+    actionAlt: 'border-2 border-[#b32025] bg-transparent text-[#b32025] hover:bg-[#b32025]/5',
   }
 }
 
@@ -247,14 +256,14 @@ function DirectoryHome({ primaryTask, enabledTasks, listingPosts, classifiedPost
           <div className="grid gap-4 md:grid-cols-2">
             {(profilePosts.length ? profilePosts : classifiedPosts).slice(0, 4).map((post) => {
               const meta = getPostMeta(post)
-              const taskKey = resolveTaskKey(post.task, profilePosts.length ? 'profile' : 'classified')
+              const taskKey = resolveTaskKey(postTaskKey(post), profilePosts.length ? 'profile' : 'classified')
               return (
                 <Link key={post.id} href={getTaskHref(taskKey, post.slug)} className={`overflow-hidden rounded-[1.8rem] ${tone.panel}`}>
                   <div className="relative h-44 overflow-hidden">
                     <ContentImage src={getPostImage(post)} alt={post.title} fill className="object-cover" />
                   </div>
                   <div className="p-5">
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.24em] opacity-70">{meta.category || post.task || 'Profile'}</p>
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.24em] opacity-70">{meta.category || postTaskKey(post) || 'Profile'}</p>
                     <h3 className="mt-2 text-xl font-semibold">{post.title}</h3>
                     <p className={`mt-2 text-sm leading-7 ${tone.muted}`}>{post.summary || 'Quick access to local information and related surfaces.'}</p>
                   </div>
@@ -268,61 +277,118 @@ function DirectoryHome({ primaryTask, enabledTasks, listingPosts, classifiedPost
   )
 }
 
-function EditorialHome({ primaryTask, articlePosts, supportTasks }: { primaryTask?: EnabledTask; articlePosts: SitePost[]; supportTasks: EnabledTask[] }) {
+function EditorialHome({
+  primaryTask,
+  articlePosts,
+  profilePosts,
+}: {
+  primaryTask?: EnabledTask
+  articlePosts: SitePost[]
+  profilePosts: SitePost[]
+}) {
   const tone = getEditorialTone()
   const lead = articlePosts[0]
   const side = articlePosts.slice(1, 5)
+  const insightGrid = lead ? articlePosts.slice(1, 7) : articlePosts.slice(0, 6)
+  const profiles = profilePosts.slice(0, 6)
 
   return (
     <main className={tone.shell}>
+      <section className="relative overflow-hidden text-white">
+        <div className="absolute inset-0 bg-[linear-gradient(105deg,#0b1628_0%,#0f766e_52%,#0b1628_100%)]" aria-hidden />
+        {lead ? (
+          <div className="absolute inset-0 opacity-30" aria-hidden>
+            <ContentImage src={getPostImage(lead)} alt="" fill className="object-cover" priority />
+          </div>
+        ) : null}
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(11,22,40,0.5)_0%,rgba(11,22,40,0.82)_100%)]" aria-hidden />
+        <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
+          <span className="editorial-label border-white/40 bg-white/10 text-white backdrop-blur-sm">
+            <FileText className="h-3.5 w-3.5 text-[#fecaca]" />
+            Insights &amp; profiles
+          </span>
+          <h1 className="mt-6 max-w-3xl text-4xl font-semibold leading-[1.08] tracking-[-0.04em] sm:text-5xl lg:text-6xl">
+            Trusted editorial coverage with a human contributor layer you can follow.
+          </h1>
+          <p className="mt-6 max-w-2xl text-base leading-relaxed text-white/85 sm:text-lg">{SITE_CONFIG.description}</p>
+          <div className="mt-10 flex flex-wrap gap-3">
+            <Link
+              href={primaryTask?.route || '/articles'}
+              className="inline-flex items-center gap-2 rounded-md bg-[#b32025] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-black/20 transition hover:bg-[#951a1f]"
+            >
+              Read latest insights
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+            <Link
+              href="/profile"
+              className="inline-flex items-center gap-2 rounded-md border-2 border-white/70 bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/15"
+            >
+              Browse contributors
+            </Link>
+          </div>
+          <div className="mt-12 grid gap-4 sm:grid-cols-3">
+            {[
+              ['Editorial rigor', 'Long-form analysis with clear sourcing and structure.'],
+              ['Contributor trust', 'Profiles that anchor expertise behind every story.'],
+              ['Scan-friendly', 'Dense information, generous spacing, zero template noise.'],
+            ].map(([k, v]) => (
+              <div key={k} className="rounded-md border border-white/15 bg-white/5 px-4 py-4 text-sm backdrop-blur-sm">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/70">{k}</p>
+                <p className="mt-2 leading-relaxed text-white/90">{v}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8 lg:py-18">
-        <div className="grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-start">
+        <div className="grid gap-10 lg:grid-cols-[1.12fr_0.88fr] lg:items-start">
           <div>
-            <span className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] ${tone.badge}`}>
+            <span className={`inline-flex items-center gap-2 rounded-sm px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] ${tone.badge}`}>
               <FileText className="h-3.5 w-3.5" />
-              Reading-first publication
+              This week
             </span>
-            <h1 className={`mt-6 max-w-4xl text-5xl font-semibold tracking-[-0.06em] sm:text-6xl ${tone.title}`}>
-              Essays, analysis, and slower reading designed like a publication, not a dashboard.
-            </h1>
-            <p className={`mt-6 max-w-2xl text-base leading-8 ${tone.muted}`}>{SITE_CONFIG.description}</p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link href={primaryTask?.route || '/articles'} className={`inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold ${tone.action}`}>
-                Start reading
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-              <Link href="/about" className={`inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold ${tone.actionAlt}`}>
-                About the publication
-              </Link>
-            </div>
+            <h2 className={`mt-5 text-3xl font-semibold tracking-[-0.03em] sm:text-4xl ${tone.title}`}>Fresh perspectives worth your attention</h2>
+            <p className={`mt-4 max-w-2xl text-base leading-relaxed ${tone.muted}`}>
+              Deep dives and field notes from editors and contributors—structured for fast scanning and comfortable reading.
+            </p>
           </div>
 
-          <aside className={`rounded-[2rem] p-6 ${tone.panel}`}>
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] opacity-70">Inside this issue</p>
+          <aside className={`rounded-md p-6 ${tone.panel}`}>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">On the desk</p>
             <div className="mt-5 space-y-5">
-              {side.map((post) => (
-                <Link key={post.id} href={`/articles/${post.slug}`} className="block border-b border-black/10 pb-5 last:border-b-0 last:pb-0">
-                  <p className="text-sm font-semibold uppercase tracking-[0.18em] opacity-60">Feature</p>
-                  <h3 className="mt-2 text-xl font-semibold">{post.title}</h3>
-                  <p className={`mt-2 text-sm leading-7 ${tone.muted}`}>{post.summary || 'Long-form perspective with a calmer reading rhythm.'}</p>
-                </Link>
-              ))}
+              {side.length ? (
+                side.map((post) => (
+                  <Link key={post.id} href={`/articles/${post.slug}`} className="block border-b border-slate-200/80 pb-5 last:border-b-0 last:pb-0">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#b32025]">Briefing</p>
+                    <h3 className="mt-2 text-lg font-semibold text-slate-900">{post.title}</h3>
+                    <p className={`mt-2 text-sm leading-relaxed ${tone.muted}`}>{post.summary || 'Editorial note with a calmer reading rhythm.'}</p>
+                  </Link>
+                ))
+              ) : (
+                <p className={`text-sm ${tone.muted}`}>New desk notes will appear as soon as the next publish cycle completes.</p>
+              )}
             </div>
           </aside>
         </div>
 
         {lead ? (
-          <div className={`mt-12 overflow-hidden rounded-[2.5rem] ${tone.panel}`}>
+          <div className={`mt-12 overflow-hidden rounded-md ${tone.panel}`}>
             <div className="grid lg:grid-cols-[1.05fr_0.95fr]">
-              <div className="relative min-h-[360px] overflow-hidden">
+              <div className="relative min-h-[300px] overflow-hidden sm:min-h-[360px]">
                 <ContentImage src={getPostImage(lead)} alt={lead.title} fill className="object-cover" />
               </div>
-              <div className="p-8 lg:p-10">
-                <p className="text-xs font-semibold uppercase tracking-[0.24em] opacity-70">Lead story</p>
-                <h2 className="mt-4 text-4xl font-semibold tracking-[-0.04em]">{lead.title}</h2>
-                <p className={`mt-4 text-sm leading-8 ${tone.muted}`}>{lead.summary || 'A more deliberate lead story surface with room for a proper narrative setup.'}</p>
-                <Link href={`/articles/${lead.slug}`} className={`mt-8 inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold ${tone.action}`}>
-                  Read article
+              <div className="flex flex-col justify-center p-8 lg:p-10">
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#b32025]">Cover story</p>
+                <h2 className="mt-4 text-3xl font-semibold tracking-[-0.03em] sm:text-4xl">{lead.title}</h2>
+                <p className={`mt-4 text-sm leading-relaxed sm:text-base ${tone.muted}`}>
+                  {lead.summary || 'Lead coverage with room for context, data, and narrative pacing.'}
+                </p>
+                <Link
+                  href={`/articles/${lead.slug}`}
+                  className={`mt-8 inline-flex w-fit items-center gap-2 rounded-md px-5 py-3 text-sm font-semibold ${tone.action}`}
+                >
+                  Read full insight
                   <ArrowRight className="h-4 w-4" />
                 </Link>
               </div>
@@ -330,13 +396,84 @@ function EditorialHome({ primaryTask, articlePosts, supportTasks }: { primaryTas
           </div>
         ) : null}
 
-        <div className="mt-12 grid gap-6 md:grid-cols-3">
-          {supportTasks.slice(0, 3).map((task) => (
-            <Link key={task.key} href={task.route} className={`rounded-[1.8rem] p-6 ${tone.soft}`}>
-              <h3 className="text-xl font-semibold">{task.label}</h3>
-              <p className={`mt-3 text-sm leading-7 ${tone.muted}`}>{task.description}</p>
+        <div className="mt-16 border-b border-slate-200/90 pb-6">
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#b32025]">Insights &amp; trends</p>
+          <div className="mt-3 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+            <h2 className={`text-3xl font-semibold tracking-[-0.03em] ${tone.title}`}>Latest from the newsroom</h2>
+            <Link href="/articles" className="text-sm font-semibold text-[#b32025] hover:text-[#951a1f]">
+              View all insights <span aria-hidden>→</span>
             </Link>
-          ))}
+          </div>
+        </div>
+
+        <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          {insightGrid.length ? (
+            insightGrid.map((post) => (
+              <Link key={post.id} href={`/articles/${post.slug}`} className={`group flex flex-col overflow-hidden rounded-md ${tone.soft} transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_16px_40px_rgba(11,22,40,0.08)]`}>
+                <div className="relative aspect-[16/10] overflow-hidden bg-slate-100">
+                  <ContentImage src={getPostImage(post)} alt={post.title} fill className="object-cover transition duration-500 group-hover:scale-[1.03]" />
+                  <span className="absolute left-3 top-3 rounded-sm bg-white/95 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-700 shadow-sm">
+                    {new Date(post.publishedAt || post.createdAt || Date.now()).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                  </span>
+                </div>
+                <div className="flex flex-1 flex-col p-5">
+                  <h3 className="text-lg font-semibold leading-snug text-slate-900">{post.title}</h3>
+                  <p className={`mt-2 flex-1 text-sm leading-relaxed ${tone.muted}`}>{post.summary || 'Structured analysis and reporting notes.'}</p>
+                  <span className="mt-4 text-sm font-semibold text-[#b32025]">
+                    Read more <span aria-hidden>→</span>
+                  </span>
+                </div>
+              </Link>
+            ))
+          ) : (
+            <p className={`col-span-full rounded-md border border-dashed border-slate-300 bg-white py-12 text-center text-sm ${tone.muted}`}>
+              New insights will appear here when the feed syncs.
+            </p>
+          )}
+        </div>
+
+        <div className="mt-20 rounded-md border border-slate-200/90 bg-white px-4 py-12 sm:px-8 lg:px-12">
+          <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#b32025]">Contributors</p>
+              <h2 className="mt-3 text-3xl font-semibold tracking-[-0.03em] text-slate-900">People behind the reporting</h2>
+              <p className={`mt-3 max-w-2xl text-sm leading-relaxed sm:text-base ${tone.muted}`}>
+                Follow the journalists, analysts, and operators whose profiles anchor the work you read here.
+              </p>
+            </div>
+            <Link href="/profile" className={`inline-flex w-fit items-center gap-2 rounded-md px-5 py-3 text-sm font-semibold ${tone.action}`}>
+              Open directory
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {profiles.length ? (
+              profiles.map((post) => (
+                <Link
+                  key={post.id}
+                  href={`/profile/${post.slug}`}
+                  className="flex flex-col rounded-md border border-slate-200/80 bg-[#f9f8f6] p-6 transition hover:border-[#b32025]/35 hover:shadow-md"
+                >
+                  <div className="flex items-start gap-4">
+                    <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-full border border-slate-200 bg-white">
+                      <ContentImage src={getPostImage(post)} alt={post.title} fill className="object-cover" />
+                    </div>
+                    <div className="min-w-0">
+                      <h3 className="font-semibold text-slate-900">{post.title}</h3>
+                      <div className="mt-1 flex items-center gap-0.5 text-amber-500" aria-hidden>
+                        {Array.from({ length: 5 }).map((_, i) => (
+                          <Star key={i} className="h-3.5 w-3.5 fill-current" />
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  <p className={`mt-4 text-sm leading-relaxed ${tone.muted}`}>{post.summary || 'Contributor bio and beat focus.'}</p>
+                </Link>
+              ))
+            ) : (
+              <p className={`col-span-full text-center text-sm ${tone.muted}`}>Contributor profiles will appear as they join the network.</p>
+            )}
+          </div>
         </div>
       </section>
     </main>
@@ -375,7 +512,7 @@ function VisualHome({ primaryTask, imagePosts, profilePosts, articlePosts }: { p
             {gallery.slice(0, 5).map((post, index) => (
               <Link
                 key={post.id}
-                href={getTaskHref(resolveTaskKey(post.task, 'image'), post.slug)}
+                href={getTaskHref(resolveTaskKey(postTaskKey(post), 'image'), post.slug)}
                 className={index === 0 ? `col-span-2 row-span-2 overflow-hidden rounded-[2.4rem] ${tone.panel}` : `overflow-hidden rounded-[1.8rem] ${tone.soft}`}
               >
                 <div className={index === 0 ? 'relative h-[360px]' : 'relative h-[170px]'}>
@@ -440,7 +577,7 @@ function CurationHome({ primaryTask, bookmarkPosts, profilePosts, articlePosts }
 
           <div className="grid gap-4 md:grid-cols-2">
             {collections.map((post) => (
-              <Link key={post.id} href={getTaskHref(resolveTaskKey(post.task, 'sbm'), post.slug)} className={`rounded-[1.8rem] p-6 ${tone.panel}`}>
+              <Link key={post.id} href={getTaskHref(resolveTaskKey(postTaskKey(post), 'sbm'), post.slug)} className={`rounded-[1.8rem] p-6 ${tone.panel}`}>
                 <p className="text-xs font-semibold uppercase tracking-[0.24em] opacity-70">Collection</p>
                 <h3 className="mt-3 text-2xl font-semibold">{post.title}</h3>
                 <p className={`mt-3 text-sm leading-8 ${tone.muted}`}>{post.summary || 'A calmer bookmark surface with room for context and grouping.'}</p>
@@ -490,7 +627,6 @@ export default async function HomePage() {
   ).filter(({ posts }) => posts.length)
 
   const primaryTask = enabledTasks.find((task) => task.key === recipe.primaryTask) || enabledTasks[0]
-  const supportTasks = enabledTasks.filter((task) => task.key !== primaryTask?.key)
   const listingPosts = taskFeed.find(({ task }) => task.key === 'listing')?.posts || []
   const classifiedPosts = taskFeed.find(({ task }) => task.key === 'classified')?.posts || []
   const articlePosts = taskFeed.find(({ task }) => task.key === 'article')?.posts || []
@@ -521,7 +657,7 @@ export default async function HomePage() {
   ]
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="site-canvas">
       <NavbarShell />
       <SchemaJsonLd data={schemaData} />
       {productKind === 'directory' ? (
@@ -535,7 +671,7 @@ export default async function HomePage() {
         />
       ) : null}
       {productKind === 'editorial' ? (
-        <EditorialHome primaryTask={primaryTask} articlePosts={articlePosts} supportTasks={supportTasks} />
+        <EditorialHome primaryTask={primaryTask} articlePosts={articlePosts} profilePosts={profilePosts} />
       ) : null}
       {productKind === 'visual' ? (
         <VisualHome primaryTask={primaryTask} imagePosts={imagePosts} profilePosts={profilePosts} articlePosts={articlePosts} />

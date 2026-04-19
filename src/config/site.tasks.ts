@@ -17,7 +17,7 @@ export const siteTaskDefinitions = [
   },
   {
     key: 'article',
-    label: 'Articles',
+    label: 'Insights',
     route: '/articles',
     description: 'Insights, blogs, and long-form content.',
     contentType: 'article',
@@ -33,7 +33,7 @@ export const siteTaskDefinitions = [
   },
   {
     key: 'profile',
-    label: 'Profiles',
+    label: 'Contributors',
     route: '/profile',
     description: 'Creator and business profiles.',
     contentType: 'profile',
