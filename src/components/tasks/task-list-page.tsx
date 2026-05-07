@@ -31,9 +31,9 @@ const variantShells = {
   'listing-showcase':
     'bg-[radial-gradient(circle_at_top_left,rgba(15,23,42,0.04),transparent_26%),linear-gradient(180deg,#f9f8f6_0%,#ffffff_100%)]',
   'article-editorial':
-    'bg-[radial-gradient(circle_at_18%_0%,rgba(179,32,37,0.06),transparent_32%),linear-gradient(180deg,#f9f8f6_0%,#ffffff_50%,#f4f3f0_100%)]',
+    'bg-[#f9f8f6] min-h-screen relative overflow-hidden',
   'article-journal':
-    'bg-[radial-gradient(circle_at_top_left,rgba(179,32,37,0.05),transparent_28%),linear-gradient(180deg,#f9f8f6_0%,#ffffff_100%)]',
+    'bg-[linear-gradient(180deg,#0f0c29_0%,#302b63_50%,#24243e_100%)] text-white min-h-screen relative overflow-hidden',
   'image-masonry': 'bg-[linear-gradient(180deg,#09101d_0%,#111c2f_100%)] text-white',
   'image-portfolio': 'bg-[linear-gradient(180deg,#07111f_0%,#13203a_100%)] text-white',
   'profile-creator':
@@ -68,14 +68,24 @@ export async function TaskListPage({ task, category }: { task: TaskKey; category
   const shellClass = variantShells[layoutKey as keyof typeof variantShells] || 'bg-background'
   const Icon = taskIcons[task] || LayoutGrid
 
-  const isDark = layoutKey === 'image-masonry' || layoutKey === 'image-portfolio'
+  const isDark = layoutKey === 'image-masonry' || layoutKey === 'image-portfolio' || layoutKey === 'article-journal'
+  const isGradient = false  // Disabled gradient for article-editorial
+  const isLight = layoutKey === 'article-editorial'
   const ui = isDark
     ? {
         muted: 'text-slate-300',
-        panel: 'border border-white/10 bg-white/6',
-        soft: 'border border-white/10 bg-white/5',
-        input: 'border-white/10 bg-white/6 text-white',
+        panel: 'border border-white/10 bg-white/6 backdrop-blur-xl',
+        soft: 'border border-white/10 bg-white/5 backdrop-blur-lg',
+        input: 'border-white/10 bg-white/6 text-white placeholder:text-white/60',
         button: 'bg-white text-slate-950 hover:bg-slate-200',
+      }
+    : isGradient
+    ? {
+        muted: 'text-white/90',
+        panel: 'border border-white/20 bg-white/10 backdrop-blur-xl shadow-2xl',
+        soft: 'border border-white/15 bg-white/5 backdrop-blur-lg',
+        input: 'border-white/20 bg-white/10 text-white placeholder:text-white/60 backdrop-blur-md',
+        button: 'bg-white text-purple-900 hover:bg-purple-50 shadow-lg',
       }
     : {
         muted: 'text-slate-600',
@@ -157,29 +167,61 @@ export async function TaskListPage({ task, category }: { task: TaskKey; category
 
         {layoutKey === 'article-editorial' || layoutKey === 'article-journal' ? (
           <section className="mb-12 grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
-            <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#b32025]">{taskConfig?.label || task}</p>
-              <h1 className="mt-3 max-w-4xl text-4xl font-semibold tracking-[-0.04em] text-slate-900 sm:text-5xl">{taskConfig?.description || 'Latest posts'}</h1>
-              <p className={`mt-5 max-w-2xl text-sm leading-relaxed sm:text-base ${ui.muted}`}>
-                This reading surface uses slower pacing, stronger typographic hierarchy, and more breathing room so long-form content feels intentional rather than squeezed into a generic feed.
-              </p>
+            <div className="relative">
+              {isGradient && (
+                <div className="absolute -top-4 -left-4 h-32 w-32 rounded-full bg-white/20 blur-3xl animate-pulse" />
+              )}
+              <div className="relative z-10">
+                <div className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.22em] ${isGradient ? 'bg-white/20 text-white border border-white/30 backdrop-blur-md' : isLight ? 'bg-slate-900 text-white' : 'bg-slate-900 text-white'}`}>
+                  <Icon className="h-4 w-4" /> {taskConfig?.label || task}
+                </div>
+                <h1 className={`mt-6 max-w-4xl text-4xl font-semibold tracking-[-0.04em] ${isGradient ? 'text-white' : isLight ? 'text-slate-900' : 'text-slate-900'} sm:text-6xl lg:text-7xl`}>
+                  {taskConfig?.description || 'Latest posts'}
+                </h1>
+                <p className={`mt-6 max-w-2xl text-lg leading-relaxed ${isLight ? 'text-slate-600' : ui.muted} sm:text-xl`}>
+                  {isGradient 
+                    ? 'Immerse yourself in a vibrant reading experience where content flows like art through a spectrum of colors and ideas.'
+                    : 'Navigate through carefully curated content in a space designed for deep focus and intellectual exploration.'
+                  }
+                </p>
+                <div className="mt-8 flex flex-wrap gap-4">
+                  <div className={`inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold ${isGradient ? 'bg-white text-purple-900 shadow-xl' : isLight ? 'bg-[#b32025] text-white' : 'bg-slate-800 text-white border border-slate-700'}`}>
+                    <span className="h-2 w-2 rounded-full bg-green-400 animate-pulse" />
+                    Live Updates
+                  </div>
+                  <div className={`inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold ${isGradient ? 'bg-white/10 text-white border border-white/20 backdrop-blur-md' : isLight ? 'bg-white text-slate-700 border border-slate-200 shadow-sm' : 'bg-slate-900/50 text-white/80 border border-slate-700'}`}>
+                    {posts.length} Articles
+                  </div>
+                </div>
+              </div>
             </div>
-            <div className={`rounded-md p-6 ${ui.panel}`}>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#b32025]">Reading note</p>
-              <p className={`mt-4 text-sm leading-relaxed ${ui.muted}`}>
-                Use category filters to jump between topics without collapsing the page into the same repeated card rhythm used by other task types.
-              </p>
-              <form className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center" action={taskConfig?.route || '#'}>
-                <select name="category" defaultValue={normalizedCategory} className={`h-11 flex-1 rounded-md px-3 text-sm ${ui.input}`}>
-                  <option value="all">All categories</option>
-                  {CATEGORY_OPTIONS.map((item) => (
-                    <option key={item.slug} value={item.slug}>{item.name}</option>
-                  ))}
-                </select>
-                <button type="submit" className={`h-11 shrink-0 rounded-md px-5 text-sm font-semibold ${ui.button}`}>
-                  Apply
-                </button>
-              </form>
+            <div className={`relative rounded-2xl p-8 ${ui.panel} overflow-hidden`}>
+              {isGradient && (
+                <>
+                  <div className="absolute top-0 right-0 h-20 w-20 rounded-full bg-white/10 blur-2xl" />
+                  <div className="absolute bottom-0 left-0 h-16 w-16 rounded-full bg-white/15 blur-xl" />
+                </>
+              )}
+              <div className="relative z-10">
+                <p className={`text-[11px] font-semibold uppercase tracking-[0.2em] ${isLight ? 'text-slate-500' : 'text-white/80'}`}>Reading Experience</p>
+                <p className={`mt-4 text-sm leading-relaxed ${isLight ? 'text-slate-600' : ui.muted}`}>
+                  {isGradient 
+                    ? 'Navigate through topics with our intelligent filtering system that adapts to your reading preferences.'
+                    : 'Use category filters to jump between topics without collapsing the page into repetitive patterns.'
+                  }
+                </p>
+                <form className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center" action={taskConfig?.route || '#'}>
+                  <select name="category" defaultValue={normalizedCategory} className={`h-12 flex-1 rounded-xl px-4 text-sm ${ui.input} backdrop-blur-md`}>
+                    <option value="all">All categories</option>
+                    {CATEGORY_OPTIONS.map((item) => (
+                      <option key={item.slug} value={item.slug}>{item.name}</option>
+                    ))}
+                  </select>
+                  <button type="submit" className={`h-12 shrink-0 rounded-xl px-6 text-sm font-semibold ${ui.button} transition-all duration-300 hover:scale-105`}>
+                    Apply Filter
+                  </button>
+                </form>
+              </div>
             </div>
           </section>
         ) : null}

@@ -1,7 +1,7 @@
 import { ContentImage } from "@/components/shared/content-image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { MapPin, Globe, Phone, Tag, Mail } from "lucide-react";
+import { MapPin, Globe, Phone, Tag, Mail, ArrowRight } from "lucide-react";
 import { NavbarShell } from "@/components/shared/navbar-shell";
 import { Footer } from "@/components/shared/footer";
 import { TaskPostCard } from "@/components/shared/task-post-card";
@@ -267,41 +267,77 @@ export async function TaskDetailPage({ task, slug }: { task: TaskKey; slug: stri
         >
           <div className={cn(isClassified ? "space-y-8" : "")}>
             {isArticle ? (
-              <div className="mx-auto w-full max-w-4xl space-y-6 rounded-md border border-slate-200/90 bg-white p-6 shadow-[0_16px_44px_rgba(11,22,40,0.05)] sm:p-8 lg:p-10">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#b32025]">Insight</p>
-                <h1 className="text-3xl font-semibold leading-tight tracking-[-0.03em] text-slate-900 sm:text-4xl">{post.title}</h1>
-                <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-slate-600">
-                  <span>By {articleAuthor}</span>
-                  {articleDate ? <span>{articleDate}</span> : null}
-                  <Badge variant="secondary" className="inline-flex items-center gap-1 border-slate-200 bg-slate-50 text-slate-800">
-                    <Tag className="h-3.5 w-3.5" />
-                    {category}
-                  </Badge>
-                </div>
-                {postTags.length ? (
-                  <div className="flex flex-wrap gap-2">
-                    {postTags.map((tag) => (
-                      <Badge key={tag} variant="outline" className="border-slate-200 text-slate-700">
-                        {tag}
-                      </Badge>
-                    ))}
+              <div className="relative">
+                {/* Background decoration for unique design */}
+                <div className="absolute -inset-8 bg-gradient-to-br from-purple-500/10 via-pink-500/10 to-blue-500/10 rounded-3xl backdrop-blur-3xl" />
+                <div className="absolute top-4 right-4 h-24 w-24 rounded-full bg-gradient-to-br from-purple-400/20 to-pink-400/20 blur-2xl animate-pulse" />
+                <div className="absolute bottom-8 left-8 h-16 w-16 rounded-full bg-gradient-to-br from-blue-400/20 to-cyan-400/20 blur-xl" />
+                
+                <div className="relative mx-auto w-full max-w-5xl space-y-8 rounded-3xl border border-white/20 bg-white/80 backdrop-blur-2xl p-8 shadow-2xl sm:p-12 lg:p-16">
+                  <div className="flex flex-col gap-4">
+                    <div className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-purple-500/20 to-pink-500/20 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-purple-900 backdrop-blur-sm border border-purple-200/50">
+                      <span className="h-2 w-2 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 animate-pulse" />
+                      Featured Insight
+                    </div>
+                    <h1 className="text-4xl font-bold leading-tight tracking-[-0.03em] bg-gradient-to-r from-purple-900 via-pink-900 to-blue-900 bg-clip-text text-transparent sm:text-5xl lg:text-6xl">
+                      {post.title}
+                    </h1>
                   </div>
-                ) : null}
-                {articleSummary ? <p className="text-base leading-relaxed text-slate-600">{articleSummary}</p> : null}
-                {images[0] ? (
-                  <div className="relative aspect-[16/9] w-full overflow-hidden rounded-md border border-slate-200/90 bg-slate-100">
-                    <ContentImage
-                      src={images[0]}
-                      alt={`${post.title} featured image`}
-                      fill
-                      className="object-cover"
-                      intrinsicWidth={1600}
-                      intrinsicHeight={900}
+                  
+                  <div className="flex flex-wrap items-center gap-x-6 gap-y-3 text-sm">
+                    <div className="flex items-center gap-2 rounded-full bg-gradient-to-r from-purple-100 to-pink-100 px-4 py-2 text-purple-900 font-medium">
+                      <div className="h-6 w-6 rounded-full bg-gradient-to-r from-purple-500 to-pink-500" />
+                      {articleAuthor}
+                    </div>
+                    <div className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-cyan-100 to-blue-100 px-4 py-2 text-cyan-900 font-medium border border-cyan-200/50">
+                      <Tag className="h-4 w-4" />
+                      {category}
+                    </div>
+                  </div>
+                  
+                  {postTags.length ? (
+                    <div className="flex flex-wrap gap-2">
+                      {postTags.map((tag) => (
+                        <div key={tag} className="rounded-full bg-gradient-to-r from-purple-50 to-pink-50 px-3 py-1 text-xs font-medium text-purple-800 border border-purple-200/50">
+                          #{tag}
+                        </div>
+                      ))}
+                    </div>
+                  ) : null}
+                  
+                  {articleSummary ? (
+                    <div className="rounded-2xl bg-gradient-to-br from-purple-50/50 to-pink-50/50 p-6 border border-purple-200/50 backdrop-blur-sm">
+                      <p className="text-lg leading-relaxed text-purple-900 font-medium italic">
+                        "{articleSummary}"
+                      </p>
+                    </div>
+                  ) : null}
+                  
+                  {images[0] ? (
+                    <div className="relative aspect-[16/9] w-full overflow-hidden rounded-2xl border border-white/30 bg-gradient-to-br from-purple-100 to-pink-100 shadow-xl">
+                      <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-pink-500/10" />
+                      <ContentImage
+                        src={images[0]}
+                        alt={`${post.title} featured image`}
+                        fill
+                        className="object-cover mix-blend-multiply"
+                        intrinsicWidth={1600}
+                        intrinsicHeight={900}
+                      />
+                    </div>
+                  ) : null}
+                  
+                  <div className="rounded-2xl bg-white/60 backdrop-blur-sm p-8 border border-purple-200/50">
+                    <RichContent 
+                      html={articleHtml} 
+                      className="leading-8 prose-p:my-6 prose-h2:my-8 prose-h3:my-6 prose-ul:my-6 prose-headings:text-purple-900 prose-a:text-purple-600 prose-a:border-b-2 prose-a:border-purple-200 prose-a:hover:border-purple-400 prose-strong:text-purple-900" 
                     />
                   </div>
-                ) : null}
-                <RichContent html={articleHtml} className="leading-8 prose-p:my-6 prose-h2:my-8 prose-h3:my-6 prose-ul:my-6" />
-                <ArticleComments slug={post.slug} />
+                  
+                  <div className="rounded-2xl bg-gradient-to-br from-purple-100/50 to-pink-100/50 p-6 border border-purple-200/50 backdrop-blur-sm">
+                    <ArticleComments slug={post.slug} />
+                  </div>
+                </div>
               </div>
             ) : null}
 
@@ -472,40 +508,49 @@ export async function TaskDetailPage({ task, slug }: { task: TaskKey; slug: stri
           ) : null}
         </div>
 
-        <section className="mt-12">
+        <section className="mt-16">
           {related.length ? (
             <>
-            <div className="mb-4 flex flex-col gap-2 border-b border-slate-200/90 pb-4 sm:flex-row sm:items-end sm:justify-between">
+            <div className="mb-8 flex flex-col gap-4 border-b border-purple-200/50 pb-8 sm:flex-row sm:items-end sm:justify-between">
               <div>
-                <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#b32025]">Related</p>
-                <h2 className="mt-1 text-xl font-semibold text-slate-900">More in {category}</h2>
+                <div className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-purple-500/20 to-pink-500/20 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-purple-900 backdrop-blur-sm border border-purple-200/50">
+                  <span className="h-2 w-2 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 animate-pulse" />
+                  Related Articles
+                </div>
+                <h2 className="mt-3 text-3xl font-bold bg-gradient-to-r from-purple-900 via-pink-900 to-blue-900 bg-clip-text text-transparent">
+                  More in {category}
+                </h2>
               </div>
               {taskConfig?.route && (
-                <Link href={taskConfig.route} className="text-sm font-semibold text-[#b32025] hover:text-[#951a1f]">
-                  View all →
+                <Link href={taskConfig.route} className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-3 text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl">
+                  View all 
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Link>
               )}
             </div>
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
               {related.map((item) => (
-                <TaskPostCard
-                  key={item.id}
-                  post={item}
-                  href={buildPostUrl(task, item.slug)}
-                />
+                <div key={item.id} className="group relative">
+                  <div className="absolute -inset-2 bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                  <TaskPostCard
+                    post={item}
+                    href={buildPostUrl(task, item.slug)}
+                  />
+                </div>
               ))}
             </div>
             </>
           ) : null}
-          <nav className="mt-6 rounded-md border border-slate-200/90 bg-white p-4 shadow-sm">
-            <p className="text-sm font-semibold text-slate-900">Related links</p>
-            <ul className="mt-2 space-y-2 text-sm">
+          <nav className="mt-8 rounded-2xl bg-gradient-to-br from-purple-50/50 to-pink-50/50 p-6 border border-purple-200/50 backdrop-blur-sm">
+            <p className="text-sm font-semibold text-purple-900">Quick Links</p>
+            <ul className="mt-4 space-y-3 text-sm">
               {related.map((item) => (
                 <li key={`link-${item.id}`}>
                   <Link
                     href={buildPostUrl(task, item.slug)}
-                    className="text-primary underline-offset-4 hover:underline"
+                    className="group flex items-center gap-2 text-purple-700 transition-colors hover:text-purple-900"
                   >
+                    <span className="h-1.5 w-1.5 rounded-full bg-purple-400 group-hover:bg-purple-600" />
                     {item.title}
                   </Link>
                 </li>
@@ -514,8 +559,9 @@ export async function TaskDetailPage({ task, slug }: { task: TaskKey; slug: stri
                 <li>
                   <Link
                     href={taskConfig.route}
-                    className="text-primary underline-offset-4 hover:underline"
+                    className="group flex items-center gap-2 font-semibold text-purple-700 transition-colors hover:text-purple-900"
                   >
+                    <span className="h-1.5 w-1.5 rounded-full bg-purple-400 group-hover:bg-purple-600" />
                     Browse all {taskConfig.label}
                   </Link>
                 </li>
@@ -523,8 +569,9 @@ export async function TaskDetailPage({ task, slug }: { task: TaskKey; slug: stri
               <li>
                 <Link
                   href={`/search?q=${encodeURIComponent(category)}`}
-                  className="text-primary underline-offset-4 hover:underline"
+                  className="group flex items-center gap-2 text-purple-700 transition-colors hover:text-purple-900"
                 >
+                  <span className="h-1.5 w-1.5 rounded-full bg-purple-400 group-hover:bg-purple-600" />
                   Search more in {category}
                 </Link>
               </li>
