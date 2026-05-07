@@ -412,9 +412,6 @@ function EditorialHome({
               <Link key={post.id} href={`/articles/${post.slug}`} className={`group flex flex-col overflow-hidden rounded-md ${tone.soft} transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_16px_40px_rgba(11,22,40,0.08)]`}>
                 <div className="relative aspect-[16/10] overflow-hidden bg-slate-100">
                   <ContentImage src={getPostImage(post)} alt={post.title} fill className="object-cover transition duration-500 group-hover:scale-[1.03]" />
-                  <span className="absolute left-3 top-3 rounded-sm bg-white/95 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-700 shadow-sm">
-                    {new Date(post.publishedAt || post.createdAt || Date.now()).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
-                  </span>
                 </div>
                 <div className="flex flex-1 flex-col p-5">
                   <h3 className="text-lg font-semibold leading-snug text-slate-900">{post.title}</h3>

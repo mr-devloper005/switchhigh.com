@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Mansalva&display=swap');
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
@@ -75,9 +76,10 @@
 }
 
 @theme inline {
-  --font-sans: var(--font-manrope), system-ui, sans-serif;
+  --font-mansalva: 'Mansalva', cursive;
+  --font-sans: 'Mansalva', cursive, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
-  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
+  --font-display: 'Mansalva', cursive, serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -131,8 +133,60 @@
   body {
     @apply bg-background text-foreground;
     min-height: 100vh;
-    background-image: linear-gradient(180deg, #f9f8f6 0%, #ffffff 42%, #f4f3f0 100%);
-    background-attachment: fixed;
+    background-color: #f9f8f6 !important;
+    background-image: none !important;
+  }
+
+  body[data-page="article"] {
+    background-color: #f9f8f6 !important;
+    background-image: none !important;
+  }
+
+  body[data-page="article"]::before {
+    display: none !important;
+  }
+
+  body[data-page="article"]::after {
+    display: none !important;
+  }
+
+  html[data-page="article"] body {
+    background-color: #f9f8f6 !important;
+    background-image: none !important;
+  }
+
+  html[data-page="article"] body::before {
+    display: none !important;
+  }
+
+  .article-page-bg {
+    background-color: #f8f7f5 !important;
+    background-image: none !important;
+  }
+
+  .article-page-bg-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #f8f7f5;
+    z-index: -2;
+    pointer-events: none;
+  }
+
+  .article-bg {
+    background-color: #f9f8f6 !important;
+    background-image: none !important;
+  }
+
+  body:has(.article-bg) {
+    background-color: #f9f8f6 !important;
+    background-image: none !important;
+  }
+
+  body:has(.article-bg)::before {
+    display: none !important;
   }
 
   body::before {
@@ -150,7 +204,7 @@
   h2,
   h3,
   h4 {
-    font-family: var(--font-sans);
+    font-family: 'Mansalva', cursive;
     letter-spacing: -0.02em;
   }
 
@@ -159,7 +213,7 @@
   input,
   button,
   textarea {
-    font-family: var(--font-sans);
+    font-family: 'Mansalva', cursive;
   }
 
   ::selection {
@@ -265,17 +319,13 @@ body[data-site-shell="directory"] {
 }
 
 body[data-site-shell="editorial"] {
-  background-image:
-    radial-gradient(circle at top left, rgba(179, 32, 37, 0.06), transparent 26%),
-    radial-gradient(circle at top right, rgba(11, 22, 40, 0.05), transparent 24%),
-    linear-gradient(180deg, #f9f8f6 0%, #ffffff 48%, #f4f3f0 100%);
+  background-color: #f9f8f6 !important;
+  background-image: none !important;
 }
 
 body[data-site-shell="article-home"] {
-  background-image:
-    radial-gradient(circle at 18% 0%, rgba(179, 32, 37, 0.07), transparent 32%),
-    radial-gradient(circle at 88% 8%, rgba(15, 23, 42, 0.06), transparent 28%),
-    linear-gradient(180deg, #f9f8f6 0%, #ffffff 50%, #f4f3f0 100%);
+  background-color: #f9f8f6 !important;
+  background-image: none !important;
 }
 
 body[data-site-shell="studio"] {
@@ -294,9 +344,8 @@ body[data-site-shell="market"] {
 
 
 .factory-brand-editorial {
-  background-image:
-    radial-gradient(circle at top left, rgba(179, 32, 37, 0.06), transparent 28%),
-    linear-gradient(180deg, #f9f8f6 0%, #ffffff 55%, #f2f1ee 100%);
+  background-color: #f9f8f6 !important;
+  background-image: none !important;
 }
 
 .factory-brand-directory {
@@ -321,7 +370,7 @@ body[data-site-shell="market"] {
 .factory-font-editorial h2,
 .factory-font-editorial h3,
 .factory-font-editorial h4 {
-  font-family: var(--font-sans);
+  font-family: 'Mansalva', cursive;
   letter-spacing: -0.02em;
 }
 
@@ -333,14 +382,14 @@ body[data-site-shell="market"] {
 .factory-font-market h2,
 .factory-font-market h3,
 .factory-font-market h4 {
-  font-family: var(--font-sans);
+  font-family: 'Mansalva', cursive;
 }
 
 .factory-font-studio h1,
 .factory-font-studio h2,
 .factory-font-studio h3,
 .factory-font-studio h4 {
-  font-family: var(--font-sans);
+  font-family: 'Mansalva', cursive;
   letter-spacing: -0.05em;
 }
 
