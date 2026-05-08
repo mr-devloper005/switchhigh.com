@@ -106,13 +106,11 @@ If you want to add specific files only:
 git add path/to/file
 ```
 
----
 
 ## 7. Commit your changes
 Use a clear commit message.
 
 Example:
-
 ```bash
 git commit -m "Update Meivera homepage UI"
 ```
