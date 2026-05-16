@@ -48,6 +48,7 @@ export default async function SearchPage({
     const content = post.content && typeof post.content === "object" ? post.content : {};
     const typeText = compactText((content as any).type);
     if (typeText === "comment") return false;
+    if (typeText === "profile") return false;
     const description = compactText((content as any).description);
     const body = compactText((content as any).body);
     const excerpt = compactText((content as any).excerpt);
@@ -75,8 +76,8 @@ export default async function SearchPage({
       title="Search the library"
       description={
         query
-          ? `Results for “${query}” across insights and contributor profiles.`
-          : "Search long-form insights and contributor profiles in one place."
+          ? `Results for “${query}” across insights and listings.`
+          : "Search long-form insights and listings in one place."
       }
       actions={
         <form action="/search" className="flex w-full gap-2 sm:w-auto">
@@ -108,7 +109,7 @@ export default async function SearchPage({
         </div>
       ) : (
         <div className="rounded-md border border-dashed border-slate-300 bg-white p-10 text-center text-sm text-slate-600">
-          No matching insights or profiles yet. Try another phrase or browse from the homepage.
+          No matching insights or listings yet. Try another phrase or browse from the homepage.
         </div>
       )}
     </PageShell>
