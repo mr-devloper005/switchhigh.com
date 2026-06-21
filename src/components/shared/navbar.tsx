@@ -4,13 +4,12 @@ import { useMemo, useState } from 'react'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Search, Menu, X, User, FileText, Building2, LayoutGrid, Tag, Image as ImageIcon, ChevronRight, Sparkles, MapPin, Plus, Mail, Github, Twitter, Linkedin } from 'lucide-react'
+import { Search, Menu, X, User, FileText, Building2, LayoutGrid, Tag, Image as ImageIcon, ChevronRight, Sparkles, MapPin, Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/lib/auth-context'
 import { SITE_CONFIG, type TaskKey } from '@/lib/site-config'
 import { cn } from '@/lib/utils'
 import { siteContent } from '@/config/site.content'
-import { siteIdentity } from '@/config/site.identity'
 import { getFactoryState } from '@/design/factory/get-factory-state'
 import { NAVBAR_OVERRIDE_ENABLED, NavbarOverride } from '@/overrides/navbar'
 
@@ -98,7 +97,7 @@ export function Navbar() {
   const { isAuthenticated } = useAuth()
   const { recipe } = getFactoryState()
 
-  const navigation = useMemo(() => SITE_CONFIG.tasks.filter((task) => task.enabled), [])
+  const navigation = useMemo(() => SITE_CONFIG.tasks.filter((task) => task.enabled && task.key !== 'profile'), [])
   const primaryNavigation = navigation.slice(0, 5)
   const mobileNavigation = navigation.map((task) => ({
     name: task.label,
@@ -208,30 +207,6 @@ export function Navbar() {
 
   return (
     <div className="sticky top-0 z-50">
-      {isEditorial ? (
-        <div className="border-b border-white/10 bg-[#8b1519] text-[10px] font-medium text-white/95 sm:text-[11px]">
-          <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-2 px-4 py-2 sm:px-6 lg:px-8">
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
-              <span className="inline-flex items-center gap-1.5">
-                <Mail className="h-3.5 w-3.5 shrink-0 opacity-90" aria-hidden />
-                <span className="truncate">desk@{siteIdentity.domain}</span>
-              </span>
-              <span className="hidden opacity-80 sm:inline">Editorial desk · Mon–Fri 9:00–18:00</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Link href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="rounded-sm p-1 opacity-90 hover:bg-white/10 hover:opacity-100" aria-label="Twitter">
-                <Twitter className="h-3.5 w-3.5" />
-              </Link>
-              <Link href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="rounded-sm p-1 opacity-90 hover:bg-white/10 hover:opacity-100" aria-label="LinkedIn">
-                <Linkedin className="h-3.5 w-3.5" />
-              </Link>
-              <Link href="https://github.com" target="_blank" rel="noopener noreferrer" className="rounded-sm p-1 opacity-90 hover:bg-white/10 hover:opacity-100" aria-label="GitHub">
-                <Github className="h-3.5 w-3.5" />
-              </Link>
-            </div>
-          </div>
-        </div>
-      ) : null}
       <header className={cn('w-full', style.shell)}>
       <nav className={cn('mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8', isFloating ? 'h-24 pt-4' : 'h-20')}>
         <div className="flex min-w-0 flex-1 items-center gap-4 lg:gap-7">
@@ -328,7 +303,7 @@ export function Navbar() {
                 <Link href="/login">Sign In</Link>
               </Button>
               <Button size="sm" asChild className={style.cta}>
-                <Link href="/register">{isEditorial ? 'Create profile' : isUtility ? 'Post Now' : 'Get Started'}</Link>
+                
               </Button>
             </div>
           )}
