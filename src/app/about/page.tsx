@@ -3,9 +3,7 @@ import type { Metadata } from 'next'
 import { ArrowRight, Compass, Layers, Shield, Sparkles } from 'lucide-react'
 import { PageShell } from '@/components/shared/page-shell'
 import { Button } from '@/components/ui/button'
-import { mockTeamMembers } from '@/data/mock-data'
 import { SITE_CONFIG } from '@/lib/site-config'
-import { ContentImage } from '@/components/shared/content-image'
 import { buildPageMetadata } from '@/lib/seo'
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -48,9 +46,6 @@ export default function AboutPage() {
       description="An editorial network built for professionals who need depth, speed, and accountability in the same session."
       actions={
         <>
-          <Button variant="outline" className="rounded-md border-2 border-[#b32025] text-[#b32025] hover:bg-[#b32025]/5" asChild>
-            <Link href="/team">Meet the team</Link>
-          </Button>
           <Button className="rounded-md bg-[#b32025] hover:bg-[#951a1f]" asChild>
             <Link href="/contact">Talk to the desk</Link>
           </Button>
@@ -131,37 +126,6 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="mt-16">
-        <div className="flex flex-col justify-between gap-4 border-b border-slate-200/90 pb-6 sm:flex-row sm:items-end">
-          <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#b32025]">Leadership & desk</p>
-            <h2 className="mt-2 text-2xl font-semibold text-slate-900 sm:text-3xl">Faces you will see on bylines</h2>
-          </div>
-          <Link href="/team" className="text-sm font-semibold text-[#b32025] hover:text-[#951a1f]">
-            Full roster →
-          </Link>
-        </div>
-        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {mockTeamMembers.slice(0, 6).map((member) => (
-            <div
-              key={member.id}
-              className="flex flex-col rounded-md border border-slate-200/90 bg-white p-5 shadow-sm transition hover:border-[#b32025]/30 hover:shadow-md"
-            >
-              <div className="flex items-center gap-3">
-                <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-full border border-slate-200">
-                  <ContentImage src={member.avatar} alt={member.name} fill className="object-cover" />
-                </div>
-                <div>
-                  <p className="font-semibold text-slate-900">{member.name}</p>
-                  <p className="text-xs text-slate-500">{member.role}</p>
-                </div>
-              </div>
-              <p className="mt-4 line-clamp-4 text-sm leading-relaxed text-slate-600">{member.bio}</p>
-              <p className="mt-3 text-xs text-slate-400">{member.location}</p>
-            </div>
-          ))}
-        </div>
-      </section>
     </PageShell>
   )
 }

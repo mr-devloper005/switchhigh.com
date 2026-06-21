@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { ArrowRight, Bookmark, Building2, Compass, FileText, Image as ImageIcon, LayoutGrid, MapPin, ShieldCheck, Star, Tag, User } from 'lucide-react'
+import { ArrowRight, Bookmark, Building2, Compass, FileText, Image as ImageIcon, LayoutGrid, MapPin, ShieldCheck, Tag, User } from 'lucide-react'
 import { ContentImage } from '@/components/shared/content-image'
 import { NavbarShell } from '@/components/shared/navbar-shell'
 import { Footer } from '@/components/shared/footer'
@@ -290,7 +290,6 @@ function EditorialHome({
   const lead = articlePosts[0]
   const side = articlePosts.slice(1, 5)
   const insightGrid = lead ? articlePosts.slice(1, 7) : articlePosts.slice(0, 6)
-  const profiles = profilePosts.slice(0, 6)
 
   return (
     <main className={tone.shell}>
@@ -305,7 +304,7 @@ function EditorialHome({
         <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
           <span className="editorial-label border-white/40 bg-white/10 text-white backdrop-blur-sm">
             <FileText className="h-3.5 w-3.5 text-[#fecaca]" />
-            Insights &amp; profiles
+            Insights
           </span>
           <h1 className="mt-6 max-w-3xl text-4xl font-semibold leading-[1.08] tracking-[-0.04em] sm:text-5xl lg:text-6xl">
             Trusted editorial coverage with a human contributor layer you can follow.
@@ -318,12 +317,6 @@ function EditorialHome({
             >
               Read latest insights
               <ArrowRight className="h-4 w-4" />
-            </Link>
-            <Link
-              href="/profile"
-              className="inline-flex items-center gap-2 rounded-md border-2 border-white/70 bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/15"
-            >
-              Browse contributors
             </Link>
           </div>
           <div className="mt-12 grid gap-4 sm:grid-cols-3">
@@ -429,49 +422,6 @@ function EditorialHome({
           )}
         </div>
 
-        <div className="mt-20 rounded-md border border-slate-200/90 bg-white px-4 py-12 sm:px-8 lg:px-12">
-          <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#b32025]">Contributors</p>
-              <h2 className="mt-3 text-3xl font-semibold tracking-[-0.03em] text-slate-900">People behind the reporting</h2>
-              <p className={`mt-3 max-w-2xl text-sm leading-relaxed sm:text-base ${tone.muted}`}>
-                Follow the journalists, analysts, and operators whose profiles anchor the work you read here.
-              </p>
-            </div>
-            <Link href="/profile" className={`inline-flex w-fit items-center gap-2 rounded-md px-5 py-3 text-sm font-semibold ${tone.action}`}>
-              Open directory
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {profiles.length ? (
-              profiles.map((post) => (
-                <Link
-                  key={post.id}
-                  href={`/profile/${post.slug}`}
-                  className="flex flex-col rounded-md border border-slate-200/80 bg-[#f9f8f6] p-6 transition hover:border-[#b32025]/35 hover:shadow-md"
-                >
-                  <div className="flex items-start gap-4">
-                    <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-full border border-slate-200 bg-white">
-                      <ContentImage src={getPostImage(post)} alt={post.title} fill className="object-cover" />
-                    </div>
-                    <div className="min-w-0">
-                      <h3 className="font-semibold text-slate-900">{post.title}</h3>
-                      <div className="mt-1 flex items-center gap-0.5 text-amber-500" aria-hidden>
-                        {Array.from({ length: 5 }).map((_, i) => (
-                          <Star key={i} className="h-3.5 w-3.5 fill-current" />
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                  <p className={`mt-4 text-sm leading-relaxed ${tone.muted}`}>{post.summary || 'Contributor bio and beat focus.'}</p>
-                </Link>
-              ))
-            ) : (
-              <p className={`col-span-full text-center text-sm ${tone.muted}`}>Contributor profiles will appear as they join the network.</p>
-            )}
-          </div>
-        </div>
       </section>
     </main>
   )
@@ -500,9 +450,6 @@ function VisualHome({ primaryTask, imagePosts, profilePosts, articlePosts }: { p
                 Open gallery
                 <ArrowRight className="h-4 w-4" />
               </Link>
-              <Link href="/profile" className={`inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold ${tone.actionAlt}`}>
-                Meet creators
-              </Link>
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
@@ -528,13 +475,13 @@ function VisualHome({ primaryTask, imagePosts, profilePosts, articlePosts }: { p
           </div>
           <div className="grid gap-4 md:grid-cols-3">
             {creators.map((post) => (
-              <Link key={post.id} href={`/profile/${post.slug}`} className={`rounded-[1.8rem] p-5 ${tone.soft}`}>
+              <div key={post.id} className={`rounded-[1.8rem] p-5 ${tone.soft}`}>
                 <div className="relative h-40 overflow-hidden rounded-[1.2rem]">
                   <ContentImage src={getPostImage(post)} alt={post.title} fill className="object-cover" />
                 </div>
                 <h3 className="mt-4 text-lg font-semibold">{post.title}</h3>
                 <p className={`mt-2 text-sm leading-7 ${tone.muted}`}>{post.summary || 'Creator profile and visual identity surface.'}</p>
-              </Link>
+              </div>
             ))}
           </div>
         </div>
@@ -566,9 +513,6 @@ function CurationHome({ primaryTask, bookmarkPosts, profilePosts, articlePosts }
                 Open collections
                 <ArrowRight className="h-4 w-4" />
               </Link>
-              <Link href="/profile" className={`inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold ${tone.actionAlt}`}>
-                Explore curators
-              </Link>
             </div>
           </div>
 
@@ -591,13 +535,13 @@ function CurationHome({ primaryTask, bookmarkPosts, profilePosts, articlePosts }
           </div>
           <div className="grid gap-4 md:grid-cols-3">
             {people.map((post) => (
-              <Link key={post.id} href={`/profile/${post.slug}`} className={`rounded-[1.8rem] p-5 ${tone.soft}`}>
+              <div key={post.id} className={`rounded-[1.8rem] p-5 ${tone.soft}`}>
                 <div className="relative h-32 overflow-hidden rounded-[1.2rem]">
                   <ContentImage src={getPostImage(post)} alt={post.title} fill className="object-cover" />
                 </div>
                 <h3 className="mt-4 text-lg font-semibold">{post.title}</h3>
                 <p className={`mt-2 text-sm leading-7 ${tone.muted}`}>Curator profile, saved resources, and collection notes.</p>
-              </Link>
+              </div>
             ))}
           </div>
         </div>
